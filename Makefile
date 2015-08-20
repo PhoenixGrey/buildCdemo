@@ -1,24 +1,24 @@
-CC=gcc
+CC=g++
 
 SDIR=./libsrc
 IDIR=./libinclude
 ODIR=./libbuild
 LDIR=./lib
 
-_OBJS=encryption.o
+_OBJS=md5.o
 OBJS=$(patsubst %,$(ODIR)/%,$(_OBJS))
 
-LIBNAME=libencryption.a
+LIBNAME=libmd5.a
 
 main: lib	
-	#$(CC) -o main main.c -L./lib/ -lencryption
-	$(CC) -o main `gnustep-config --objc-flags` main.m -lgnustep-base -lobjc -L./lib/ -lencryption
+	$(CC) -std=c++0x -o main main.cpp -L./lib/ -lmd5
+#	$(CC) -o main `gnustep-config --objc-flags` main.m -lgnustep-base -lobjc -L./lib/ -lmd5
 
 lib: $(OBJS)
 	ar -cvq $(LDIR)/$(LIBNAME) $^ 
 
-$(ODIR)/%.o: $(SDIR)/%.c $(IDIR)/%.h 
-	$(CC) -c -o $@ $< -I$(IDIR)
+$(ODIR)/%.o: $(SDIR)/%.cpp $(IDIR)/%.h 
+	$(CC) -std=c++0x -c -o $@ $< -I$(IDIR)
 
 
 .PHONY:clean
