@@ -1,7 +1,14 @@
 Object-C adopting C++ static lib (.a)
 ===
 
-In order to adopt the C++ lib in Object-C project, I made several modification in the project pulled from `git@github.com:ulwanski/md5.git`. The general idea is to expose the C interfaces which encapsulate the C++ lib, so that Object-C has no problem calling C functions.
+In order to adopt the C++ lib in Object-C project, I adopt `git@github.com:ulwanski/md5.git` as the base project, which is a md5 project in C++. 
+
+In this project, we are going to complete 2 tasks as following
+
+* Compile a C++ static lib called `libmd5.a`
+* Create an Object-C project using md5 static lib built above
+
+The general idea is to expose the C interfaces which encapsulate the C++ static lib, since Object-C has no problem calling C functions directly.
 
 ##Purify C++ header to C header
 ###Move C++ relevated header to C++ source file
