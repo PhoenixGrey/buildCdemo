@@ -11,8 +11,8 @@ OBJS=$(patsubst %,$(ODIR)/%,$(_OBJS))
 LIBNAME=libmd5.a
 
 main: lib	
-	$(CC) -std=c++0x -o main main.cpp -L./lib/ -lmd5
-#	$(CC) -o main `gnustep-config --objc-flags` main.m -lgnustep-base -lobjc -L./lib/ -lmd5
+	$(CC) -o mainC main.c -L./lib/ -lmd5
+	$(CC) -o mainObjC `gnustep-config --objc-flags` main.m -lgnustep-base -lobjc -L./lib/ -lmd5
 
 lib: $(OBJS)
 	ar -cvq $(LDIR)/$(LIBNAME) $^ 
@@ -23,4 +23,4 @@ $(ODIR)/%.o: $(SDIR)/%.cpp $(IDIR)/%.h
 
 .PHONY:clean
 clean:
-	rm -f $(ODIR)/*.o main *.o $(LDIR)/*.a *.d
+	rm -f $(ODIR)/*.o mainC mainObjC *.o $(LDIR)/*.a *.d

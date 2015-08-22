@@ -1,4 +1,6 @@
 #include "md5.h"
+#include <string>
+#include <cstring>
 
 #ifndef HAVE_OPENSSL
 
@@ -243,13 +245,6 @@ static char hb2hex(unsigned char hb) {
     return hb < 10 ? '0' + hb : hb - 10 + 'a';
 }
 
-string md5file(const char* filename){
-	std::FILE* file = std::fopen(filename, "rb");
-	string res = md5file(file);
-	std::fclose(file);
-	return res;
-}
-
 string md5file(std::FILE* file){
 
 	MD5_CTX c;
@@ -271,6 +266,25 @@ string md5file(std::FILE* file){
 	return res;
 }
 
+string md5file(const char* filename){
+	std::FILE* file = std::fopen(filename, "rb");
+	string res = md5file(file);
+	std::fclose(file);
+	return res;
+}
+
+/*
+	extern C as an interface for Object-C
+*/
+char* md5file_C(const char* filename){
+	std::FILE* file = std::fopen(filename, "rb");
+	string str = md5file(file);
+	std::fclose(file);
+	char *res = new char[str.length() + 1];
+	strcpy(res, str.c_str());
+	return res;
+}
+
 string md5(const void* dat, size_t len) {
     string res;
     unsigned char out[16];
@@ -286,6 +300,16 @@ std::string md5(std::string dat){
 	return md5(dat.c_str(), dat.length());
 }
 
+/*
+	extern C as an interface for Object-C
+*/
+char* md5_C(char* dat){
+	string dat_str(dat) ;
+	string str = md5(dat_str.c_str(), dat_str.length());
+	char *cstr = new char[str.length() + 1];
+	strcpy(cstr, str.c_str());
+	return cstr;
+}
 /* Generate shorter md5sum by something like base62 instead of base16 or base10. 0~61 are represented by 0-9a-zA-Z */
 string md5sum6(const void* dat, size_t len){
     static const char* tbl = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -300,4 +324,15 @@ string md5sum6(const void* dat, size_t len){
 
 std::string md5sum6(std::string dat){
 	return md5sum6(dat.c_str(), dat.length() );
+}
+
+/*
+	extern C as an interface for Object-C
+*/
+char* md5sum6_C(char* dat){
+	string dat_str(dat);
+	string str = md5sum6(dat_str.c_str(), dat_str.length());
+	char *cstr = new char[str.length() + 1];
+	strcpy(cstr, str.c_str());
+	return cstr;
 }
