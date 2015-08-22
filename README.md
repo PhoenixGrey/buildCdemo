@@ -1,7 +1,7 @@
 Object-C adopting C++ static lib (.a)
 ===
 
-In order to adopt the C++ lib in Object-C project, I made several modification in the project pulled from XXX. The general idea is to expose the C interfaces which encapsulate the C++ lib, so that Object-C has no problem calling C functions.
+In order to adopt the C++ lib in Object-C project, I made several modification in the project pulled from `git@github.com:ulwanski/md5.git`. The general idea is to expose the C interfaces which encapsulate the C++ lib, so that Object-C has no problem calling C functions.
 
 ##Purify C++ header to C header
 ###Move C++ relevated header to C++ source file
