@@ -1,45 +1,64 @@
-md5
+Object-C adopting C++ static lib (.a)
 ===
 
-Class to create MD5 checksum from file or string
+In order to adopt the C++ lib in Object-C project, I made several modification in the project pulled from XXX. The general idea is to expose the C interfaces which encapsulate the C++ lib, so that Object-C has no problem calling C functions.
 
-<b>Example</b>
+##Purify C++ header to C header
+###Move C++ relevated header to C++ source file
 
-```c++
+In original header file `md5.h`,
+  ```
+    #include <string>
+    #include <cstring>
+  ```
+should be moved to file `md5.cpp`
 
-#include "md5/md5.h"
+###Refine C++ interfaces to C interfaces
 
-int main(int argc,char** argv){
+In original header file `md5.h`,
+  ```
+    std::string md5(std::string dat);
+    std::string md5(const void* dat, size_t len);
+    std::string md5file(const char* filename);
+    std::string md5file(std::FILE* file);
+    std::string md5sum6(std::string dat);
+    std::string md5sum6(const void* dat, size_t len);
+  ```
+should be changed into
+  ```
+    char* md5_C(char* dat);
+    char* md5sum6_C(char* dat);
+    char* md5file_C(const char* filename);
+  ```
+    Reasons are
 
-  char cstring[] = "Foo baz, testing.";
-  std::string str = cstring;
+    1.  There are actually only 3 functions necessary to be exposed, according to business logic.
+    2.  The interfaces should be in C syntax.
 
-  /* MD5 from std::string */
-  printf("md5sum: %s\n",  md5(  str ).c_str());
-  
-  /* MD5 from c-string */
-  printf("md5sum: %s\n",  md5(  cstring ).c_str());
-  
-  /* Short MD5 from c-string */
-  printf("md5sum6: %s\n", md5sum6( cstring ).c_str());
-  
-  /* Short MD5 from std::string */
-  printf("md5sum6: %s\n", md5sum6( str ).c_str());
-  
-  /* MD5 from filename */
-  printf("md5file: %s\n", md5file("README.md").c_str());
-  
-  /* MD5 from opened file */
-  std::FILE* file = std::fopen("README.md", "rb");
-  printf("md5file: %s\n", md5file(file).c_str());
-  std::fclose(file);
+###Extern C interfaces
+In header file `md5.h`, it should declare that those interfaces should be linked as C functions. In this case, we braces the interfaces by
 
-  /* we're done */
-  return EXIT_SUCCESS;
-}
+  ```
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
+  ```
+and
+  ```
+    #ifdef __cplusplus
+    }
+    #endif
+  ```
 
-```
+##Add interface implementation in C++ source file
+In our case, we need to add three more functions in `md5.cpp`, which are
+  ```
+    char* md5_C(char* dat);
+    char* md5sum6_C(char* dat);
+    char* md5file_C(const char* filename);
+  ```
+They are used as a syntax adaptor from C++ to C. 
 
-<b>Compilation in g++</b>
-
-<i>g++ -std=c++0x -o md5 md5.cpp main.cpp</i>
+##Usage
+* To build `mainC` and `mainObjC`, which are executed in C and Object-C environment respectively. Just build by `make`. The lib `libmd5.a` is generated in folder `lib` through both build process.
+* Clean build by `make clean`.
