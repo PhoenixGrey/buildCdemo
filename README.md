@@ -5,8 +5,8 @@ In order to adopt the C++ lib in Object-C project, I adopt `git@github.com:ulwan
 
 In this project, we are going to complete 2 tasks as following
 
-* Compile a C++ static lib called `libmd5.a`
-* Create an Object-C project using md5 static lib built above
+* Compile a C++ static lib called `libmd5.a`.
+* Create an Object-C project using md5 static lib built above.
 
 The general idea is to expose the C interfaces which encapsulate the C++ static lib, since Object-C has no problem calling C functions directly.
 
@@ -67,5 +67,6 @@ In our case, we need to add three more functions in `md5.cpp`, which are
 They are used as a syntax adaptor from C++ to C. 
 
 ##Usage
-* To build `mainC` and `mainObjC`, which are executed in C and Object-C environment respectively. Just build by `make`. The lib `libmd5.a` is generated in folder `lib` through both build process.
+* Build up environment by `./envBuild.sh`, under which Object-C project can be built in Linux.
+* To build C and Object-C executable program `mainC` and `mainObjC` by `make`. The lib `libmd5.a` is generated in the folder `lib` within build process.
 * Clean build by `make clean`.
